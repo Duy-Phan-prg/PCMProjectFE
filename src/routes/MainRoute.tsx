@@ -1,25 +1,19 @@
-import React  from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import  ManagerRoute from "./ManagerRoute";
-import Dashboard from "../pages/Dashboard";
-import NotFoundPage from "../pages/NotFoundPage";
-import LoginPage from "../pages/LoginPage";
+import ManagerRoute from "./ManagerRoute";
+import HomePage from "../pages/home/HomePage";
 
 const MainRoute: React.FC = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route element ={<ManagerRoute />}>
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/" element={<Dashboard />} />
+                {/* Admin routes */}
+                <Route element={<ManagerRoute />}>
+                <Route path = "/" element={<HomePage/>}/>
                 </Route>
-
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>
-    )
-}
+    );
+};
 
-MainRoute.prototype = {}
 export default MainRoute;

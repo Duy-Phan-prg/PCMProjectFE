@@ -1,5 +1,6 @@
-import ManagerLayout form '../layouts/ManagerLayout';
+import ManagerLayout from "../layouts/MangerLayout";
 import { Outlet } from "react-router-dom";
+import React from 'react';
 
 const ManagerRoute: React.FC = () => {
     return(
@@ -9,5 +10,5 @@ const ManagerRoute: React.FC = () => {
     )
 }
 
-ManagerRoute.prototype = {}
+ManagerRoute.propTypes = {}
 export default ManagerRoute;
