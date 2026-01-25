@@ -8,12 +8,23 @@ const Header: React.FC = () => {
         <header className="bg-fpt-blue sticky top-0 z-50 shadow-lg backdrop-blur-sm bg-opacity-95 w-full">
             <div className="max-w-screen-2xl mx-auto px-4 md:px-8 lg:px-12 h-16 flex items-center justify-between">
                 {/* Logo */}
-                <div className="flex items-center space-x-2 cursor-pointer hover:opacity-90 transition">
-                    <span className="text-white text-2xl font-bold italic tracking-tighter">
-                        F<span className="text-fpt-orange">P</span>T
-                        <span className="text-sm not-italic font-normal opacity-80 ml-1">
-                            Store
-                        </span>
+                <div className="flex items-center cursor-pointer hover:opacity-90 transition">
+                    <div className="flex gap-0.5">
+                        {/* F Block */}
+                        <div className="relative w-8 h-11 flex items-center justify-center bg-fpt-blue rounded-tl-2xl rounded-br-2xl rounded-tr-sm rounded-bl-sm" style={{ transform: 'skewX(-15deg)' }}>
+                            <span className="text-white text-3xl font-black italic" style={{ transform: 'skewX(5deg)' }}>F</span>
+                        </div>
+                        {/* P Block */}
+                        <div className="relative w-8 h-11 flex items-center justify-center bg-fpt-orange rounded-tl-2xl rounded-br-2xl rounded-tr-sm rounded-bl-sm" style={{ transform: 'skewX(-15deg)' }}>
+                            <span className="text-white text-3xl font-black italic" style={{ transform: 'skewX(5deg)' }}>P</span>
+                        </div>
+                        {/* T Block */}
+                        <div className="relative w-8 h-11 flex items-center justify-center bg-fpt-green rounded-tl-2xl rounded-br-2xl rounded-tr-sm rounded-bl-sm" style={{ transform: 'skewX(-15deg)' }}>
+                            <span className="text-white text-3xl font-black italic" style={{ transform: 'skewX(5deg)' }}>T</span>
+                        </div>
+                    </div>
+                    <span className="text-white px-2 py-0.5 ml-2 text-2xl font-medium tracking-tight">
+                        Store
                     </span>
                 </div>
 
@@ -22,7 +33,7 @@ const Header: React.FC = () => {
                     <input
                         type="text"
                         placeholder="Tìm kiếm sản phẩm (Ví dụ: Áo FPT, Cơm trưa...)"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-full border-none outline-none focus:ring-2 focus:ring-fpt-orange transition-all text-sm shadow-sm"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-full bg-white border-none outline-none focus:ring-2 focus:ring-fpt-orange transition-all text-sm shadow-sm"
                     />
                     <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400"></i>
                 </div>
@@ -64,7 +75,7 @@ const Header: React.FC = () => {
                             <input
                                 type="text"
                                 placeholder="Tìm kiếm..."
-                                className="w-full pl-10 pr-4 py-2.5 rounded-full border-none outline-none focus:ring-2 focus:ring-fpt-orange text-sm"
+                                className="w-full pl-10 pr-4 py-2.5 rounded-full bg-white border-none outline-none focus:ring-2 focus:ring-fpt-orange text-sm"
                             />
                             <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400"></i>
                         </div>
