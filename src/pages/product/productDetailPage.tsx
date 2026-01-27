@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import type { Product } from '../../types/Product';
 import { getProductById } from '../../services/ProductService';
 import './ProductDetailPage.css';
+import { resolveImageUrl } from '../../utils/image';
+
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -39,7 +41,13 @@ const ProductDetailPage = () => {
         {/* LEFT: IMAGE */}
         <div className="product-image-section">
           <div className="product-image-wrapper">
-            <img src={product.imageUrl} alt={product.name} />
+            <img
+                  src={resolveImageUrl(product.imageUrl ?? "")}
+                  alt={product.name}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = "/no-image.png";
+                  }}
+                />
           </div>
         </div>
 
