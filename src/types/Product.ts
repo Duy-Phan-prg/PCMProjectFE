@@ -1,8 +1,12 @@
+export interface Category {
+    categoryId: string;
+    categoryName: string;
+}
 export interface Product {
     id: string;
     name: string;
     description: string;
     price: number;
-    stock: number;
-    category: string;
+    stockQuantity: number;
+    category: Category;
 }
