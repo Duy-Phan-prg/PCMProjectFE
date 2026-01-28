@@ -1,19 +1,34 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-import { getProducts } from "../../services/ProductService";
+import { getProducts, getProductsByCategoryId } from "../../services/ProductService";
 import type { Product } from "../../types/Product";
 
-const ProductList: React.FC = () => {
+
+interface ProductListProps {
+  categoryId?: number | null;
+}
+
+const ProductList: React.FC<ProductListProps> = ({ categoryId }) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getProducts()
-            .then((data) => {
-                setProducts(data);
-            })
-            .finally(() => setLoading(false));
-    }, []);
+        setLoading(true);
+
+        const fetch = async () => {
+            try {
+            const data = categoryId
+                ? await getProductsByCategoryId(categoryId)
+                : await getProducts();
+
+            setProducts(data);
+            } finally {
+            setLoading(false);
+            }
+        };
+
+        fetch();
+        }, [categoryId]);
 
     if (loading) {
         return (

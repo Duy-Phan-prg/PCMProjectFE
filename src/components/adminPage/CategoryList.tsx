@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import CategoryService from '../../services/CategoryService';
 import type { GetCategoryResponse } from '../../types/Category';
 
-const CategoryList: React.FC = () => {
+
+interface CategoryListProps {
+    onSelectCategory: (categoryId: number) => void;
+}
+
+const CategoryList: React.FC<CategoryListProps> = ({ onSelectCategory }) => {
     const [categories, setCategories] = useState<GetCategoryResponse[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>('');
@@ -68,11 +73,15 @@ const CategoryList: React.FC = () => {
                 {categories.map((category, index) => (
                     <div
                         key={category.categoryId}
+                        onClick={() => onSelectCategory(category.categoryId)}
                         className="bg-white p-5 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer text-center group border border-transparent hover:border-fpt-orange relative overflow-hidden"
-                        style={{
-                            animationDelay: `${index * 50}ms`
-                        }}
                     >
+                    <div
+                        onClick={() => onSelectCategory?.(0)}
+                        className="cursor-pointer font-semibold text-fpt-orange"
+                        >
+                        Tất cả
+                    </div>
                         <div className="absolute inset-0 bg-gradient-to-br from-fpt-orange/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         
                         <div className="relative z-10">

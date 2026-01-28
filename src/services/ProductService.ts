@@ -76,4 +76,14 @@ export const searchProducts = async (keyword: string): Promise<Product[]> => {
     }
 };
 
+export const getProductsByCategoryId = async (
+  categoryId: number
+): Promise<Product[]> => {
+  const res = await axios.get<ApiResponse<Product[]>>(
+    `/api/products?categoryId=${categoryId}`
+  );
+  return res.data.payload ?? [];
+};
+
+
 
