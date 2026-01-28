@@ -9,6 +9,7 @@ import ProtectedRoute from "../auth/ProtectedRoute"; // ← Đổi tên cho đú
 import LoginPage from "../pages/LoginPage";
 import ProductDetailPage from "../pages/product/productDetailPage";
 import CreateProductPage from "../pages/admin/CreateProductPage";
+import UpdateProductPage from "../pages/admin/UpdateProductPage";
 
 const MainRoute: React.FC = () => {
     return (
@@ -33,6 +34,7 @@ const MainRoute: React.FC = () => {
                 <Route path="category" element={<CategoryPage />} />
                 <Route path="product" element={<ProductPage />} />
                 <Route path="products/createProduct" element={<CreateProductPage />} />
+                <Route path="products/:id" element={<UpdateProductPage />} />
             </Route>
         </Route>
     </Routes>

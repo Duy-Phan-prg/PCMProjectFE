@@ -47,6 +47,10 @@ const ProductPage: React.FC = () => {
   }
 };
 
+const handleUpdateProduct = (productId: number) => {
+  navigate(`/admin/products/${productId}`);
+}
+
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -103,6 +107,7 @@ const ProductPage: React.FC = () => {
           <ProductTable
             products={filteredProducts}
             onDelete={handleDeleteProduct}
+            onUpdate={handleUpdateProduct}
           />
         )}
 
