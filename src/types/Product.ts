@@ -1,13 +1,11 @@
-export interface Category {
-    categoryId: string;
-    categoryName: string;
-}
+import type { GetCategoryResponse } from "./Category";
+
 export interface Product {
-    id?: number;
-    name: string;
-    description: string;
-    price: number;
-    stockQuantity: number;
-    imageUrl: string;
-    category: Category;
+  id?: number;
+  name: string;
+  description: string;
+  price: number;
+  stockQuantity: number;
+  imageUrl: string;
+  category: GetCategoryResponse; // ✅ number
 }

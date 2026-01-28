@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { resolveImageUrl } from "../../utils/image";
 
 interface ProductCardProps {
-    id: number;
+    id?: number;
     name: string;
     description: string;
     price: number;
