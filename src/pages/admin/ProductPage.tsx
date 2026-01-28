@@ -184,16 +184,16 @@ const ProductPage: React.FC = () => {
           {/* User Info & Logout */}
           <div className="flex items-center gap-4">
             {user && (
-              <div className="flex items-center gap-3 px-4 py-2 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200">
+              <div className="flex items-center gap-3 px-4 py-2 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 bg-blue-500 rounded-lg">
+                  <div className="p-2 bg-orange-500 rounded-lg">
                     <User size={18} className="text-white" />
                   </div>
                   <div className="text-left">
                     <p className="text-sm font-semibold text-gray-900">
                       {user.email ? user.email.split('@')[0] : 'Admin'}
                     </p>
-                    <p className="text-xs text-blue-600 capitalize">{user.role}</p>
+                    <p className="text-xs text-orange-600 capitalize">{user.role}</p>
                   </div>
                 </div>
               </div>
