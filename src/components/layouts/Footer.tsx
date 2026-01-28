@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer: React.FC = () => {
     return (
-        <footer className="from-orange-600 to-orange-700 bg-gradient-to-r text-white mt-20">
+        <footer className="from-orange-500 to-orange-500 bg-gradient-to-r text-white mt-20">
             <div className="container mx-auto px-4 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {/* Brand */}

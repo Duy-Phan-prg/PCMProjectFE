@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import {
   Search,
   Filter,
-  Eye,
   ChevronLeft,
   ChevronRight,
   Tag,
@@ -19,6 +18,8 @@ import ActionDropdown from '../../components/types/ActionDropdown';
 import { toast } from 'react-toastify';
 import type { GetCategoryResponse } from '../../types/Category';
 import { getUserFromToken } from '../../utils/auth';
+import CategoryAddModal from '../../components/adminPage/CategoryAddModal';
+import CategoryEditModal from '../../components/adminPage/CategoryEditModal';
 
 const CategoryPage = () => {
   const navigate = useNavigate();
@@ -28,9 +29,10 @@ const CategoryPage = () => {
   const [user, setUser] = useState<{ email: string; role: string } | null>(null);
   
   const [selectedCategory, setSelectedCategory] = useState<GetCategoryResponse | null>(null);
-  const [showDetailModal, setShowDetailModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -171,24 +173,75 @@ const CategoryPage = () => {
     return pages;
   };
 
+  const handleCreateCategory = async (data: { categoryName: string }) => {
+    try {
+      const response = await CategoryService.createCategory(data);
+      
+      if (response.data && response.data.payload) {
+        toast.success("Thêm danh mục thành công!");
+        await fetchCategories();
+      }
+    } catch (error: any) {
+      console.error("Error creating category:", error);
+      const errorMsg = error.response?.data?.error?.details 
+        || error.response?.data?.message 
+        || "Thêm danh mục thất bại!";
+      toast.error(errorMsg);
+      throw error;
+    }
+  };
+
+  const handleUpdateCategory = async (categoryId: number, data: { categoryName: string }) => {
+    try {
+      const response = await CategoryService.updateCategory(categoryId, data);
+      
+      if (response.data && response.data.payload) {
+        toast.success("Cập nhật danh mục thành công!");
+        
+        // Cập nhật state local
+        setCategories((prevCategories) =>
+          prevCategories.map((c) =>
+            c.categoryId === categoryId
+              ? { ...c, categoryName: data.categoryName }
+              : c
+          )
+        );
+        
+        // Refresh lại từ server
+        await fetchCategories();
+      }
+    } catch (error: any) {
+      console.error("Error updating category:", error);
+      const errorMsg = error.response?.data?.error?.details 
+        || error.response?.data?.message 
+        || "Cập nhật danh mục thất bại!";
+      toast.error(errorMsg);
+      throw error;
+    }
+  };
+
   const handleDeleteCategory = async () => {
     if (!selectedCategory) return;
 
     setSubmitting(true);
     try {
+      await CategoryService.deleteCategory(selectedCategory.categoryId);
       toast.success("Xóa danh mục thành công!");
+      
+      setShowDeleteConfirm(false);
+      setSelectedCategory(null);
       
       setCategories((prevCategories) =>
         prevCategories.filter((c) => c.categoryId !== selectedCategory.categoryId)
       );
-
-      setShowDeleteConfirm(false);
-      setSelectedCategory(null);
       
       await fetchCategories();
     } catch (error: any) {
       console.error("Error deleting category:", error);
-      toast.error(error.response?.data?.message || "Xóa danh mục thất bại!");
+      const errorMsg = error.response?.data?.error?.details 
+        || error.response?.data?.message 
+        || "Xóa danh mục thất bại!";
+      toast.error(errorMsg);
     } finally {
       setSubmitting(false);
     }
@@ -272,7 +325,7 @@ const CategoryPage = () => {
           </div>
 
           {/* Filter */}
-          <div className="flex items-center bg-gray-100 rounded-lg px-4 py-2.5 min-w-[200px]">
+          {/* <div className="flex items-center bg-gray-100 rounded-lg px-4 py-2.5 min-w-[200px]">
             <Filter size={20} className="text-gray-400 flex-shrink-0" />
             <select
               value={statusFilter}
@@ -283,11 +336,11 @@ const CategoryPage = () => {
               <option value="active">Đang hoạt động</option>
               <option value="inactive">Không hoạt động</option>
             </select>
-          </div>
+          </div> */}
 
           {/* Add Button */}
           <button
-            onClick={() => toast.info("Chức năng đang phát triển")}
+            onClick={() => setShowAddModal(true)}
             className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-orange-700 text-white px-6 py-2.5 rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all shadow-md hover:shadow-lg font-medium whitespace-nowrap"
           >
             <Plus size={20} />
@@ -384,11 +437,11 @@ const CategoryPage = () => {
                         <ActionDropdown
                           actions={[
                             {
-                              label: "Xem chi tiết",
-                              icon: Eye,
+                              label: "Chỉnh sửa",
+                              icon: Edit,
                               onClick: () => {
                                 setSelectedCategory(category);
-                                setShowDetailModal(true);
+                                setShowEditModal(true);
                               },
                             },
                             {
@@ -461,7 +514,7 @@ const CategoryPage = () => {
       </div>
 
       {/* Detail Modal */}
-      {showDetailModal && selectedCategory && (
+      {/* {showDetailModal && selectedCategory && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-gradient-to-r from-orange-600 to-orange-700 text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
@@ -538,7 +591,7 @@ const CategoryPage = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal
@@ -565,6 +618,24 @@ const CategoryPage = () => {
         onConfirm={handleLogout}
         onCancel={() => setShowLogoutConfirm(false)}
         type="danger"
+      />
+
+      {/* Add Category Modal */}
+      <CategoryAddModal
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onCreate={handleCreateCategory}
+      />
+
+      {/* Edit Category Modal */}
+      <CategoryEditModal
+        open={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setSelectedCategory(null);
+        }}
+        onUpdate={handleUpdateCategory}
+        category={selectedCategory}
       />
     </div>
   );

@@ -67,7 +67,7 @@ const Header: React.FC = () => {
     };
 
     return (
-        <header className="from-orange-600 to-orange-700 bg-gradient-to-r sticky top-0 z-50 shadow-lg backdrop-blur-sm bg-opacity-95 w-full">
+        <header className="from-orange-500 to-orange-500 bg-gradient-to-r sticky top-0 z-50 shadow-lg backdrop-blur-sm bg-opacity-95 w-full">
             <div className="max-w-screen-2xl mx-auto px-4 md:px-8 lg:px-12 h-16 flex items-center justify-between">
                 {/* Logo */}
                 <div 
