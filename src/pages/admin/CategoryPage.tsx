@@ -202,7 +202,7 @@ const CategoryPage = () => {
   return (
     <div className="p-6">
       {/* Header */}
-      <div className="mb-6 from-white-600 to-white-700 bg-gradient-to-r text-white rounded-lg shadow-md p-6">
+      <div className="mb-6 from-orange-600 to-orange-700 bg-gradient-to-r text-white rounded-lg shadow-md p-6">
         <h1 className="text-3xl font-bold text-white-900">Danh sách danh mục</h1>
         <p className="text-white-600 mt-1">Quản lý danh mục sản phẩm</p>
       </div>

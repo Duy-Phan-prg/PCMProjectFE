@@ -3,17 +3,21 @@ import type { Product } from "../../types/Product";
 
 interface Props {
     products: Product[];
+    onDelete: (productId: number) => void;
 }
 
-const ProductTable: React.FC<Props> = ({ products }) => {
+const ProductTable: React.FC<Props> = ({ products, onDelete }) => {
     return (
         <div className="bg-white rounded">
             <table className="w-full">
                 <thead className="bg-gray-50 border-b">
-                    <th className="text-left p-3">PRODUCT</th>
-                    <th className="text-left">CATEGORY</th>
-                    <th className="text-left">PRICE</th>
-                    <th className="text-left">STOCK</th>
+                    <tr>
+                        <th className="text-left p-3">PRODUCT</th>
+                        <th className="text-left">CATEGORY</th>
+                        <th className="text-left">PRICE</th>
+                        <th className="text-left">STOCK</th>
+                        <th className="text-left">ACTION</th>
+                    </tr>
                 </thead>
 
                 <tbody>
@@ -28,18 +32,20 @@ const ProductTable: React.FC<Props> = ({ products }) => {
                             
                             </td>
 
-                            <td>{p.category}</td>
+                            <td>{p.category.categoryName}</td>
 
-                            <td>{p.price.toLocaleString()}đ</td>
+                            <td>{Number(p.price ?? 0).toLocaleString()}đ</td>
 
-                            <td
-                                className={
-                                p.stock <= 2
-                                    ? 'text-red-500 font-bold'
-                                    : ''
-                                }
-                            >
-                                {p.stock}
+                            <td>
+                                {p.stockQuantity}
+                            </td>
+
+                            <td>
+                                <button 
+                                onClick={()=> onDelete(p.id)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                    Delete
+                                </button>
                             </td>
 
                             </tr>
