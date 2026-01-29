@@ -182,10 +182,10 @@ const CartPage: React.FC = () => {
                   <span className="text-gray-500">Tính ở bước tiếp theo</span>
                 </div>
                 
-                <div className="flex justify-between text-sm">
+                {/* <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Thuế (5.8%)</span>
                   <span className="font-semibold text-gray-900">{formatPrice(tax)}</span>
-                </div>
+                </div> */}
                 
                 <div className="flex items-center gap-2 pt-4">
                   <div className="relative flex-1">
@@ -215,21 +215,21 @@ const CartPage: React.FC = () => {
                 Tiến hành thanh toán
               </button>
 
-              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500">
+              {/* <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500">
                 <Lock className="h-3 w-3" />
                 <span>Thanh toán bảo mật</span>
-              </div>
+              </div> */}
               
               <div className="mt-3 flex items-center justify-center gap-2">
-                <div className="w-10 h-6 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold text-gray-700">
+                {/* <div className="w-10 h-6 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold text-gray-700">
                   VISA
-                </div>
-                <div className="w-10 h-6 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold text-gray-700">
+                </div> */}
+                {/* <div className="w-10 h-6 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold text-gray-700">
                   MC
-                </div>
-                <div className="w-10 h-6 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold text-gray-700">
+                </div> */}
+                {/* <div className="w-10 h-6 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold text-gray-700">
                   AMEX
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

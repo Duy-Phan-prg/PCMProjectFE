@@ -2,14 +2,14 @@ import React from 'react';
 
 const Footer: React.FC = () => {
     return (
-        <footer className="from-orange-500 to-orange-500 bg-gradient-to-r text-white mt-20">
+        <footer className="from-orange-400 to-orange-400 bg-gradient-to-r text-white mt-20">
             <div className="container mx-auto px-4 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {/* Brand */}
                     <div className="space-y-4">
                         <div className="flex items-center space-x-2">
                             <span className="text-3xl font-bold italic tracking-tighter">
-                                F<span className="text-fpt-orange">P</span>T
+                                F<span className="text-fpt-from-orange-500">P</span>T
                                 <span className="text-sm not-italic font-normal opacity-80 ml-1">
                                     Store
                                 </span>
