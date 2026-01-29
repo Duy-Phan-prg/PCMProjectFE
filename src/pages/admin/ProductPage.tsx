@@ -19,6 +19,7 @@ import { toast } from 'react-toastify';
 import type { Product } from '../../types/Product';
 import { getProducts, deleteProduct } from '../../services/ProductService';
 import { getUserFromToken } from '../../utils/auth';
+import { resolveImageUrl } from "../../utils/image";
 
 const ProductPage: React.FC = () => {
   const navigate = useNavigate();
@@ -349,10 +350,10 @@ const ProductPage: React.FC = () => {
                     </td>
                     <td className="px-6 py-4">
                       <img
-                        src={product.imageUrl || 'https://via.placeholder.com/80'}
-                        alt={product.name}
-                        className="w-16 h-16 rounded-lg object-cover"
-                      />
+                          src={resolveImageUrl(product.imageUrl)}
+                          alt={product.name}
+                          className="w-16 h-16 rounded-lg object-cover"
+                        />
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <span className="font-semibold text-gray-900 line-clamp-2">
@@ -478,10 +479,10 @@ const ProductPage: React.FC = () => {
             <div className="p-6 space-y-6">
               <div className="flex justify-center">
                 <img
-                  src={selectedProduct.imageUrl || 'https://via.placeholder.com/300'}
-                  alt={selectedProduct.name}
-                  className="w-64 h-64 rounded-2xl object-cover shadow-xl"
-                />
+                    src={resolveImageUrl(selectedProduct.imageUrl)}
+                    alt={selectedProduct.name}
+                    className="w-64 h-64 rounded-2xl object-cover shadow-xl"
+                  />
               </div>
 
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-5 border border-blue-200 shadow-sm">
