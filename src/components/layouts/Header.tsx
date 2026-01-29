@@ -6,7 +6,6 @@ import { CircleUserRound, LogOut, UserPlus, LogIn, MapPin, ShoppingBag } from 'l
 const Header: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [cartCount] = useState(3);
     const [user, setUser] = useState<{ email: string; role: 'user' | 'admin' } | null>(null);
     const navigate = useNavigate();
     const location = useLocation();
@@ -134,11 +133,6 @@ const Header: React.FC = () => {
                         className="relative cursor-pointer hover:text-fpt-orange transition-colors group"
                     >
                         <i className="fa-solid fa-cart-shopping text-xl"></i>
-                        {cartCount > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-fpt-orange text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-fpt-blue group-hover:scale-110 transition-transform">
-                                {cartCount}
-                            </span>
-                        )}
                     </div>
                     
                     {/* User Menu with Hover */}

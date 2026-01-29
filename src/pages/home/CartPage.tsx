@@ -6,50 +6,74 @@ import type { CartResponse } from "../../types/Cart";
 import type { ApiResponse } from "../../types/ApiResponse";
 import { resolveImageUrl } from "../../utils/image";
 
-const TAX_RATE = 0.058;
-
 const CartPage: React.FC = () => {
   const [cart, setCart] = useState<CartResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [discountCode, setDiscountCode] = useState("");
+  const [appliedDiscount, setAppliedDiscount] = useState(0);
+  const shipping = 30000; // Phí ship mặc định 30,000 VND
 
   useEffect(() => {
     const fetchCart = async () => {
-  try {
-    const res = await getCart();
+      try {
+        const res = await getCart();
 
-    console.log("CART API RESPONSE:", res.data);
+        console.log("CART API RESPONSE:", res.data);
 
-    if (res.data.status === "SUCCESS") {
-      setCart(res.data.payload);
-    } else {
-      setCart(null);
-    }
-  } catch (err) {
-    console.error("GET CART ERROR:", err);
-    setCart(null);
-  } finally {
-    setLoading(false);
-  }
-};
+        if (res.data.status === "SUCCESS") {
+          setCart(res.data.payload);
+        } else {
+          setCart(null);
+        }
+      } catch (err) {
+        console.error("GET CART ERROR:", err);
+        setCart(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchCart();
   }, []);
 
-  /* ================== TÍNH TOÁN ================== */
   const items = cart?.items ?? [];
+
+  // Tính tổng số lượng sản phẩm (bao gồm quantity)
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const subtotal = items.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
 
-  const tax = subtotal * TAX_RATE;
-  const total = subtotal + tax;
+  const total = subtotal + shipping - appliedDiscount;
 
-  const formatPrice = (price: number) => `$${price.toFixed(2)}`;
+  // Format giá VNĐ
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(price);
+  };
 
-  /* ================== CART RỖNG ================== */
+  const applyDiscount = () => {
+    if (discountCode.trim() === '') {
+      alert('Vui lòng nhập mã giảm giá');
+      return;
+    }
+    
+    if (discountCode.toUpperCase() === 'DISCOUNT10') {
+      setAppliedDiscount(50000);
+      alert('Áp dụng mã giảm 50,000 VND thành công!');
+    } else if (discountCode.toUpperCase() === 'DISCOUNT20') {
+      setAppliedDiscount(100000);
+      alert('Áp dụng mã giảm 100,000 VND thành công!');
+    } else {
+      alert('Mã giảm giá không hợp lệ');
+      setAppliedDiscount(0);
+    }
+  };
+
   if (!loading && items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -76,12 +100,11 @@ const CartPage: React.FC = () => {
     return <div className="p-10">Đang tải giỏ hàng...</div>;
   }
 
-  /* ================== UI CHÍNH ================== */
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Giỏ Hàng
+          Giỏ Hàng 
         </h1>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -101,9 +124,10 @@ const CartPage: React.FC = () => {
                     <div className="md:col-span-5 flex gap-4">
                       <div className="h-20 w-20 rounded-lg overflow-hidden bg-gray-200">
                         <img
-                            src={resolveImageUrl(item.product.imageUrl)}
-                            alt={item.product.name}
-                          />
+                          src={resolveImageUrl(item.product.imageUrl)}
+                          alt={(item.product.name)}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
 
                       <div>
@@ -126,7 +150,7 @@ const CartPage: React.FC = () => {
                             : "Sắp hết"}
                         </p>
 
-                        <button className="text-xs text-red-600 flex items-center gap-1 mt-1">
+                        <button className="text-xs text-red-600 hover:underline flex items-center gap-1 mt-1">
                           <Trash2 className="h-3 w-3" />
                           Xóa
                         </button>
@@ -136,13 +160,16 @@ const CartPage: React.FC = () => {
                     {/* QUANTITY */}
                     <div className="md:col-span-3 flex justify-center">
                       <div className="flex items-center gap-3 border rounded-lg px-3 py-2">
-                        <button disabled>
+                        <button 
+                          disabled={item.quantity <= 1}
+                          className="text-gray-700 hover:text-fpt-orange disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
                           <Minus className="h-4 w-4" />
                         </button>
-                        <span className="w-8 text-center">
+                        <span className="w-8 text-center font-medium">
                           {item.quantity}
                         </span>
-                        <button>
+                        <button className="text-gray-700 hover:text-fpt-orange">
                           <Plus className="h-4 w-4" />
                         </button>
                       </div>
@@ -150,14 +177,12 @@ const CartPage: React.FC = () => {
 
                     {/* PRICE */}
                     <div className="md:col-span-4 text-right">
-                      <p className="text-xl font-bold">
-                        {formatPrice(
-                          item.product.price * item.quantity
-                        )}
+                      <p className="text-xl font-bold text-fpt-orange">
+                        {formatPrice(item.product.price * item.quantity)}
                       </p>
                       {item.quantity > 1 && (
                         <p className="text-sm text-gray-600">
-                          {formatPrice(item.product.price)} mỗi cái
+                          {formatPrice(item.product.price)} / cái
                         </p>
                       )}
                     </div>
@@ -169,7 +194,7 @@ const CartPage: React.FC = () => {
             <div className="mt-8">
               <Link
                 to="/"
-                className="text-fpt-orange flex items-center gap-2"
+                className="text-fpt-orange hover:underline font-medium flex items-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Tiếp tục mua sắm
@@ -179,44 +204,81 @@ const CartPage: React.FC = () => {
 
           {/* SUMMARY */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-bold mb-6">
+            <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
+              <h2 className="text-xl font-bold text-gray-900 mb-6">
                 Tóm tắt đơn hàng
               </h2>
 
               <div className="space-y-4">
                 <div className="flex justify-between text-sm">
-                  <span>Tạm tính</span>
-                  <span>{formatPrice(subtotal)}</span>
+                  <span className="text-gray-600">Tạm tính</span>
+                  <span className="font-semibold text-gray-900">{formatPrice(subtotal)}</span>
                 </div>
 
                 <div className="flex justify-between text-sm">
-                  <span>Phí vận chuyển</span>
-                  <span className="text-gray-500">
-                    Tính ở bước tiếp theo
-                  </span>
+                  <span className="text-gray-600">Phí vận chuyển</span>
+                  <span className="font-semibold text-gray-900">{formatPrice(shipping)}</span>
                 </div>
 
-                <div className="flex justify-between text-sm">
-                  <span>Thuế (5.8%)</span>
-                  <span>{formatPrice(tax)}</span>
-                </div>
+                {appliedDiscount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-green-600 flex items-center gap-1">
+                      <Tag className="h-3 w-3" />
+                      Giảm giá
+                    </span>
+                    <span className="font-semibold text-green-600">-{formatPrice(appliedDiscount)}</span>
+                  </div>
+                )}
 
-                <div className="border-t pt-4 flex justify-between">
-                  <span className="font-bold">Tổng cộng</span>
-                  <span className="text-2xl font-bold">
-                    {formatPrice(total)}
-                  </span>
+                <div className="flex items-center gap-2 pt-4">
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      placeholder="Mã giảm giá"
+                      value={discountCode}
+                      onChange={(e) => setDiscountCode(e.target.value)}
+                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fpt-orange"
+                    />
+                    <Tag className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  </div>
+                  <button 
+                    onClick={applyDiscount}
+                    className="px-4 py-2 text-sm font-medium text-fpt-orange border border-fpt-orange rounded-lg hover:bg-fpt-orange hover:text-white transition-colors"
+                  >
+                    Áp dụng
+                  </button>
+                </div>
+                {/* <p className="text-xs text-gray-500">
+                  Thử: DISCOUNT10 (giảm 50k) hoặc DISCOUNT20 (giảm 100k)
+                </p> */}
+
+                <div className="border-t pt-4 mt-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-bold text-gray-900">Tổng cộng</span>
+                    <span className="text-2xl font-bold text-fpt-orange">{formatPrice(total)}</span>
+                  </div>
                 </div>
               </div>
 
-              <button className="w-full mt-6 bg-fpt-orange text-white font-bold py-3 rounded-lg">
+              <button className="w-full mt-6 bg-fpt-orange hover:bg-orange-600 text-white font-bold py-3 rounded-lg shadow-md transition-colors">
                 Tiến hành thanh toán
               </button>
 
-              <div className="mt-4 flex justify-center gap-2 text-xs text-gray-500">
+              {/* <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500">
                 <Lock className="h-3 w-3" />
-                Thanh toán bảo mật
+                <span>Thanh toán bảo mật</span>
+              </div> */}
+              
+              <div className="mt-3 flex items-center justify-center gap-2">
+                {/* <div className="w-10 h-6 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold text-gray-700">
+                  VISA
+                </div> */}
+                {/* <div className="w-10 h-6 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold text-gray-700">
+                  MC
+                </div> */}
+                {/* <div className="w-10 h-6 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold text-gray-700">
+                  MOMO
+                </div> */}
               </div>
             </div>
           </div>
