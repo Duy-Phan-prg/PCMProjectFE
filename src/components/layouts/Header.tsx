@@ -161,13 +161,15 @@ const Header: React.FC = () => {
                                     </div>
                                     
                                     {/* Menu Items */}
-                                    <button
-                                        onClick={handleProfile}
-                                        className="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-3"
-                                    >
-                                        <CircleUserRound size={18} className="text-fpt-orange" />
-                                        <span className="font-medium">Thông tin tài khoản</span>
-                                    </button>
+                                     {user.role === 'admin' && (
+                                        <button
+                                            onClick={() => navigate('/admin/category')}
+                                            className="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-3 border-t border-gray-200"
+                                        >
+                                            <i className="fa-solid fa-gauge text-fpt-orange"></i>
+                                            <span className="font-medium">Thông tin tài khoản</span>
+                                        </button>
+                                    )}
                                     
                                     {/* <button
                                         onClick={handleMyLocations}
@@ -177,7 +179,7 @@ const Header: React.FC = () => {
                                         <span className="font-medium">Địa chỉ của tôi</span>
                                     </button> */}
                                     
-                                    <button
+                                    {/* <button
                                         onClick={handleOrderHistory}
                                         className="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-3"
                                     >
@@ -193,7 +195,7 @@ const Header: React.FC = () => {
                                             <i className="fa-solid fa-gauge text-fpt-orange"></i>
                                             <span className="font-medium">Trang quản trị</span>
                                         </button>
-                                    )}
+                                    )} */}
                                     
                                     <button
                                         onClick={handleLogout}

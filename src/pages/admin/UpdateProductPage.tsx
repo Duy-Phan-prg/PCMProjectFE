@@ -28,7 +28,7 @@ const ProductEditPage = () => {
       setImagePreview(productRes?.imageUrl || "");
 
       const categoriesRes = await CategoryService.getCategories();
-      setCategories(categoriesRes.data.payload);
+      setCategories(categoriesRes.data.payload || []);
     } catch (error) {
       console.error(error);
       alert("Failed to load product data");

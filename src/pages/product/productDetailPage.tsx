@@ -55,7 +55,7 @@ const ProductDetailPage = () => {
         <div className="product-info-section">
           <div className="product-header">
             <h1>{product.name}</h1>
-            <div className="price-badge">{product.price.toLocaleString()} VND</div>
+            <div className="price-badge">{product.price.toLocaleString()}đ</div>
           </div>
 
           <div className="category-badge">
