@@ -1,3 +1,5 @@
+@import "tailwindcss";
+@import "tailwindcss";
 @import '@fortawesome/fontawesome-free/css/all.min.css';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
@@ -82,12 +84,3 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #F37021;
 }
-
-@import "tailwindcss";
-  /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424; */
