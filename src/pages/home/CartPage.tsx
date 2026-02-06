@@ -17,12 +17,7 @@ const CartPage: React.FC = () => {
       try {
         const cart = await getCart();
         console.log("CART API RESPONSE:", cart);
-        
-        if (!cart || !cart.items || cart.items.length === 0) {
-          setCart(null);
-        } else {
-          setCart(cart);
-        }
+        setCart(cart);
       } catch (err) {
         console.error("GET CART ERROR:", err);
         setCart(null);

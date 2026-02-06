@@ -36,14 +36,9 @@ const ProductEditPage = () => {
       setImagePreview(resolveImageUrl(productRes?.imageUrl || ""));
 
       const categories = await CategoryService.getCategories();
-      
-      if (!categories || categories.length === 0) {
-        setCategories([]);
-      } else {
-        setCategories(categories);
-      }
+      setCategories(categories);
     } catch (error) {
-      console.error(error);
+      console.error("Error loading data:", error);
       alert("Failed to load product data");
       setCategories([]);
     }

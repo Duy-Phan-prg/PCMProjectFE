@@ -63,12 +63,8 @@ const ProductPage: React.FC = () => {
       const data = await getProducts();
       console.log("Products loaded:", data);
       
-      if (!data || data.length === 0) {
-        setProducts([]);
-        toast.info("Chưa có sản phẩm nào");
-      } else {
-        setProducts(Array.isArray(data) ? data : []);
-      }
+      // Clear error và set data khi thành công
+      setProducts(Array.isArray(data) ? data : []);
     } catch (error: any) {
       console.error("Error fetching products:", error);
       

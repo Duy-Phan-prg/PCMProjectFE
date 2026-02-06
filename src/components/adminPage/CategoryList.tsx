@@ -19,17 +19,11 @@ const CategoryList: React.FC<CategoryListProps> = ({ onSelectCategory }) => {
         try {
             setLoading(true);
             const categories = await CategoryService.getCategories();
-            
-            if (!categories || categories.length === 0) {
-                setCategories([]);
-                setError('Chưa có danh mục nào');
-            } else {
-                setCategories(categories);
-                setError('');
-            }
+            setError(''); // Clear error khi thành công
+            setCategories(categories);
         } catch (err) {
             console.error(err);
-            setError('Lỗi khi tải danh mục');
+            setError('Không thể tải danh mục');
             setCategories([]);
         } finally {
             setLoading(false);

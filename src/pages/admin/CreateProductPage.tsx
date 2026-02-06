@@ -25,14 +25,9 @@ const CreateProductPage: React.FC = () => {
   const loadCategories = async () => {
     try {
       const categories = await CategoryService.getCategories();
-      
-      if (!categories || categories.length === 0) {
-        setCategories([]);
-      } else {
-        setCategories(categories);
-      }
+      setCategories(categories);
     } catch (error) {
-      console.error(error);
+      console.error("Error loading categories:", error);
       setCategories([]);
     }
   };

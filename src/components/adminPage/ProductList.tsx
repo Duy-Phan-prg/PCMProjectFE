@@ -22,11 +22,7 @@ const ProductList: React.FC<ProductListProps> = ({ categoryId }) => {
                     ? await getProductsByCategoryId(categoryId)
                     : await getProducts();
 
-                if (!data || data.length === 0) {
-                    setProducts([]);
-                } else {
-                    setProducts(data);
-                }
+                setProducts(data);
             } catch (error) {
                 console.error("Error fetching products:", error);
                 setProducts([]);

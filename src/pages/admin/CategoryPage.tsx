@@ -64,11 +64,6 @@ const CategoryPage = () => {
       
       console.log("Categories loaded:", categories.length, "items");
       setCategories(categories);
-      
-      if (categories.length === 0) {
-        toast.info("Chưa có danh mục nào");
-      }
-      
     } catch (error: any) {
       console.error("Error fetching categories:", error);
       
