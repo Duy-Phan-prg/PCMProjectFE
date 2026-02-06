@@ -60,29 +60,12 @@ const CategoryPage = () => {
     setIsLoading(true);
     try {
       console.log("Fetching categories...");
-      const response = await CategoryService.getCategories();
+      const categories = await CategoryService.getCategories();
       
-      console.log("Full Response:", response);
-      console.log("Response Data:", response.data);
+      console.log("Categories loaded:", categories.length, "items");
+      setCategories(categories);
       
-      let categoriesData: GetCategoryResponse[] = [];
-      
-      if (response && response.data) {
-        const data = response.data;
-        
-        if (data.status === "SUCCESS") {
-          setCategories(data.payload);
-        } else {
-          const errorMsg = data.error?.details || "Lỗi không xác định";
-          toast.error(`Lỗi: ${errorMsg}`);
-          setCategories([]);
-        }
-      }
-      
-      console.log("Categories loaded:", categoriesData.length, "items");
-      setCategories(categoriesData);
-      
-      if (categoriesData.length === 0) {
+      if (categories.length === 0) {
         toast.info("Chưa có danh mục nào");
       }
       
@@ -166,12 +149,9 @@ const CategoryPage = () => {
 
   const handleCreateCategory = async (data: { categoryName: string }) => {
     try {
-      const response = await CategoryService.createCategory(data);
-      
-      if (response.data && response.data.payload) {
-        toast.success("Thêm danh mục thành công!");
-        await fetchCategories();
-      }
+      await CategoryService.createCategory(data);
+      toast.success("Thêm danh mục thành công!");
+      await fetchCategories();
     } catch (error: any) {
       console.error("Error creating category:", error);
       const errorMsg = error.response?.data?.error?.details 
@@ -184,23 +164,20 @@ const CategoryPage = () => {
 
   const handleUpdateCategory = async (categoryId: number, data: { categoryName: string }) => {
     try {
-      const response = await CategoryService.updateCategory(categoryId, data);
+      await CategoryService.updateCategory(categoryId, data);
+      toast.success("Cập nhật danh mục thành công!");
       
-      if (response.data && response.data.payload) {
-        toast.success("Cập nhật danh mục thành công!");
-        
-        // Cập nhật state local
-        setCategories((prevCategories) =>
-          prevCategories.map((c) =>
-            c.categoryId === categoryId
-              ? { ...c, categoryName: data.categoryName }
-              : c
-          )
-        );
-        
-        // Refresh lại từ server
-        await fetchCategories();
-      }
+      // Cập nhật state local
+      setCategories((prevCategories) =>
+        prevCategories.map((c) =>
+          c.categoryId === categoryId
+            ? { ...c, categoryName: data.categoryName }
+            : c
+        )
+      );
+      
+      // Refresh lại từ server
+      await fetchCategories();
     } catch (error: any) {
       console.error("Error updating category:", error);
       const errorMsg = error.response?.data?.error?.details 

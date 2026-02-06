@@ -15,15 +15,9 @@ const CartPage: React.FC = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await getCart();
-
-        console.log("CART API RESPONSE:", res.data);
-
-        if (res.data.status === "SUCCESS") {
-          setCart(res.data.payload);
-        } else {
-          setCart(null);
-        }
+        const cart = await getCart();
+        console.log("CART API RESPONSE:", cart);
+        setCart(cart);
       } catch (err) {
         console.error("GET CART ERROR:", err);
         setCart(null);

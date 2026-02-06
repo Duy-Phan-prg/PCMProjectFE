@@ -18,13 +18,8 @@ const CategoryList: React.FC<CategoryListProps> = ({ onSelectCategory }) => {
     const fetchCategories = async () => {
         try {
             setLoading(true);
-            const response = await CategoryService.getCategories();
-
-            if (response.data.payload) {
-                setCategories(response.data.payload);
-            } else {
-                setError('Không thể tải danh mục');
-            }
+            const categories = await CategoryService.getCategories();
+            setCategories(categories);
         } catch (err) {
             console.error(err);
             setError('Lỗi khi tải danh mục');

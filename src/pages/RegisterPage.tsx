@@ -94,25 +94,22 @@ const RegisterPage: React.FC = () => {
             address: formData.address.trim(),
         };
 
-        const response = await userService.register(registerData);
+        await userService.register(registerData);
 
-        // 2️⃣ Success chỉ kiểm tra SUCCESS
-        if (response.data?.status === "SUCCESS") {
-            toast.success("Đăng ký thành công! Đang chuyển đến trang đăng nhập...");
+        toast.success("Đăng ký thành công! Đang chuyển đến trang đăng nhập...");
 
-            setFormData({
-                fullName: "",
-                phone: "",
-                address: "",
-                email: "",
-                password: ""
-            });
-            setConfirmPassword("");
+        setFormData({
+            fullName: "",
+            phone: "",
+            address: "",
+            email: "",
+            password: ""
+        });
+        setConfirmPassword("");
 
-            setTimeout(() => {
-                navigate("/login");
-            }, 1500);
-        } 
+        setTimeout(() => {
+            navigate("/login");
+        }, 1500);
 
     }catch (err: any) {
     console.error("Register error:", err);
