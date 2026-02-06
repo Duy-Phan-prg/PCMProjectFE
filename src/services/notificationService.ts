@@ -1,7 +1,6 @@
 import { apiUtils } from "../api/axios";
 import { NOTIFICATION_URL } from "../constants/apiEndPoints";
 import type { ApiResponse } from "../types/ApiResponse";
-import type { AxiosResponse } from "axios";
 import type {
   Notification,
   NotificationListResponse,
@@ -10,98 +9,65 @@ import type {
   NotificationQueryParams,
 } from "../types/Notification";
 
-/**
- * Interface cho request đăng ký subscription
- */
+/* ================= SUBSCRIPTION ================= */
+
 export interface SubscriptionRequest {
   subscriptionId: string;
   deviceId?: string;
 }
 
-/**
- * Interface cho response đăng ký subscription
- */
 export interface SubscriptionResponse {
   registered: boolean;
 }
 
-/**
- * Notification Service - Xử lý các request liên quan đến notifications
- */
+/* ================= SERVICE ================= */
+
 const notificationService = {
-  /**
-   * Đăng ký subscription với backend để nhận thông báo đích danh
-   * @param data - subscriptionId từ OneSignal và deviceId (optional)
-   * @returns Promise với response xác nhận đăng ký thành công
-   */
+
+  /* ===== Register subscription ===== */
   async registerSubscription(
     data: SubscriptionRequest
-  ): Promise<AxiosResponse<ApiResponse<SubscriptionResponse>>> {
-    return await apiUtils.post<ApiResponse<SubscriptionResponse>>(
-      `${NOTIFICATION_URL}subscriptions`,
+  ): Promise<SubscriptionResponse> {
+    const res = await apiUtils.post<ApiResponse<SubscriptionResponse>>(
+      `${NOTIFICATION_URL}/subscriptions`,
       data
     );
+    return res.data.payload!;
   },
 
-  /**
-   * Lấy danh sách thông báo của user
-   * @param params - Query parameters: page, limit, isRead, type
-   * @returns Promise với response chứa danh sách notification và meta
-   */
+  /* ===== Get notifications list ===== */
   async getNotifications(
     params?: NotificationQueryParams
-  ): Promise<AxiosResponse<ApiResponse<NotificationListResponse>>> {
-    const queryParams = new URLSearchParams();
-
-    if (params?.page) queryParams.append("page", params.page.toString());
-    if (params?.limit) queryParams.append("limit", params.limit.toString());
-    if (params?.isRead !== undefined)
-      queryParams.append("isRead", params.isRead.toString());
-    if (params?.type) queryParams.append("type", params.type);
-
-    const queryString = queryParams.toString();
-    const url = queryString
-      ? `${NOTIFICATION_URL}?${queryString}`
-      : NOTIFICATION_URL;
-
-    return await apiUtils.get<ApiResponse<NotificationListResponse>>(url);
+  ): Promise<NotificationListResponse> {
+    const res = await apiUtils.get<ApiResponse<NotificationListResponse>>(
+      NOTIFICATION_URL,
+      params
+    );
+    return res.data.payload!;
   },
 
-  /**
-   * Lấy số lượng thông báo chưa đọc
-   * @returns Promise với response chứa số lượng unreadCount
-   */
-  async getUnreadCount(): Promise<
-    AxiosResponse<ApiResponse<UnreadCountResponse>>
-  > {
-    return await apiUtils.get<ApiResponse<UnreadCountResponse>>(
-      `${NOTIFICATION_URL}unread-count`
+  /* ===== Get unread count ===== */
+  async getUnreadCount(): Promise<number> {
+    const res = await apiUtils.get<ApiResponse<UnreadCountResponse>>(
+      `${NOTIFICATION_URL}/unread-count`
     );
+    return res.data.payload?.unreadCount ?? 0;
   },
 
-  /**
-   * Đánh dấu một thông báo là đã đọc
-   * @param id - ID của thông báo
-   * @returns Promise với response chứa notification đã cập nhật
-   */
-  async markAsRead(
-    id: number
-  ): Promise<AxiosResponse<ApiResponse<Notification>>> {
-    return await apiUtils.patch<ApiResponse<Notification>>(
-      `${NOTIFICATION_URL}${id}/read`
+  /* ===== Mark one as read ===== */
+  async markAsRead(id: number): Promise<Notification> {
+    const res = await apiUtils.patch<ApiResponse<Notification>>(
+      `${NOTIFICATION_URL}/${id}/read`
     );
+    return res.data.payload!;
   },
 
-  /**
-   * Đánh dấu tất cả thông báo là đã đọc
-   * @returns Promise với response chứa message và count
-   */
-  async markAllAsRead(): Promise<
-    AxiosResponse<ApiResponse<MarkAllReadResponse>>
-  > {
-    return await apiUtils.patch<ApiResponse<MarkAllReadResponse>>(
-      `${NOTIFICATION_URL}read-all`
+  /* ===== Mark all as read ===== */
+  async markAllAsRead(): Promise<MarkAllReadResponse> {
+    const res = await apiUtils.patch<ApiResponse<MarkAllReadResponse>>(
+      `${NOTIFICATION_URL}/read-all`
     );
+    return res.data.payload!;
   },
 };
 

@@ -1,50 +1,53 @@
-import type { AxiosResponse } from "axios";
 import type { GetCategoryResponse } from "../types/Category";
 import type { ApiResponse } from "../types/ApiResponse";
-import type { CreateCategoryRequest } from "../types/Category";
-import type { CreateCategoryResponse } from "../types/Category";
+import type {
+  CreateCategoryRequest,
+  CreateCategoryResponse
+} from "../types/Category";
 import { CATEGORY_URL } from "../constants/apiEndPoints";
 import { apiUtils } from "../api/axios";
 
 const CategoryService = {
 
-    async getCategories(): Promise<AxiosResponse<ApiResponse<GetCategoryResponse[]>>> {
-        console.log("API Call: getCategories");
-        console.log("Full URL:", CATEGORY_URL);
+  /* ================= GET ================= */
+  async getCategories(): Promise<GetCategoryResponse[]> {
+    const res = await apiUtils.get<ApiResponse<GetCategoryResponse[]>>(
+      CATEGORY_URL
+    );
+    return res.data.payload ?? [];
+  },
 
-        const response = await apiUtils.get<ApiResponse<GetCategoryResponse[]>>(
-            CATEGORY_URL
-        );
-        console.log("API Response:", response);
-        return response;
-    },
+  /* ================= CREATE ================= */
+  async createCategory(
+    data: CreateCategoryRequest
+  ): Promise<CreateCategoryResponse> {
+    const res = await apiUtils.post<ApiResponse<CreateCategoryResponse>>(
+      CATEGORY_URL,
+      data
+    );
+    return res.data.payload!;
+  },
 
-    async createCategory(
-        data: CreateCategoryRequest
-    ): Promise<AxiosResponse<ApiResponse<CreateCategoryResponse>>> {
-        return await apiUtils.post<ApiResponse<CreateCategoryResponse>>(
-            CATEGORY_URL,
-            data
-        );
-    },
+  /* ================= DELETE ================= */
+  async deleteCategory(
+    categoryId: number
+  ): Promise<void> {
+    await apiUtils.delete<ApiResponse<null>>(
+      `${CATEGORY_URL}/${categoryId}`
+    );
+  },
 
-    async deleteCategory(
-        categoryId: number
-    ): Promise<AxiosResponse<ApiResponse<null>>> {
-        return await apiUtils.delete<ApiResponse<null>>(
-            `${CATEGORY_URL}/${categoryId}`
-        );
-    },
-
-    async updateCategory(
-        categoryId: number,
-        data: { categoryName: string }
-    ): Promise<AxiosResponse<ApiResponse<CreateCategoryResponse>>> {
-        return await apiUtils.put<ApiResponse<CreateCategoryResponse>>(
-            `${CATEGORY_URL}/${categoryId}`,
-            data
-        );
-    }
+  /* ================= UPDATE ================= */
+  async updateCategory(
+    categoryId: number,
+    data: { categoryName: string }
+  ): Promise<CreateCategoryResponse> {
+    const res = await apiUtils.put<ApiResponse<CreateCategoryResponse>>(
+      `${CATEGORY_URL}/${categoryId}`,
+      data
+    );
+    return res.data.payload!;
+  }
 };
-export default CategoryService;
 
+export default CategoryService;

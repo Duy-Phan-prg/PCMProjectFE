@@ -2,34 +2,37 @@ import type { ApiResponse } from "../types/ApiResponse";
 import axios from "../api/axios";
 import type { CartResponse } from "../types/Cart";
 
-export const addToCart = (productId: number, quantity: number = 1) => {
-  return axios.post(
-    "http://localhost:8080/api/cart/add",
+/* ================= ADD TO CART ================= */
+export const addToCart = async (
+  productId: number,
+  quantity: number = 1
+): Promise<void> => {
+  await axios.post<ApiResponse<null>>(
+    "/cart/add",
     null,
     {
       params: {
         productId,
         quantity,
       },
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
     }
   );
 };
 
-export const getCart = () => {
-  const token = localStorage.getItem("accessToken");
+/* ================= GET CART ================= */
+export const getCart = async (): Promise<CartResponse> => {
+  const res = await axios.get<ApiResponse<CartResponse>>("/cart");
 
-  return axios.get<ApiResponse<CartResponse>>(
-    "http://localhost:8080/api/cart",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  if (!res.data.payload) {
+    throw new Error("Cart not found");
+  }
+
+  return res.data.payload;
 };
 
-export const deleteCartItem = (id: number) =>
-  axios.delete(`/api/cart/item/${id}`);
+/* ================= DELETE CART ITEM ================= */
+export const deleteCartItem = async (
+  id: number
+): Promise<void> => {
+  await axios.delete(`/cart/item/${id}`);
+};

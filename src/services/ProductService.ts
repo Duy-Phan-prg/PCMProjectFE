@@ -2,40 +2,36 @@ import type { Product } from "../types/Product";
 import type { ApiResponse } from "../types/ApiResponse";
 import axios from "../api/axios";
 
-// export const getProducts = async (): Promise<Product[]> => {
-//   const res = await axios.get<ApiResponse<Product[]>>("/api/products");
-//   return res.data.payload ?? [];
-// };
-
+/* ================= GET ALL ================= */
 export const getProducts = async (): Promise<Product[]> => {
-  const res = await fetch("http://localhost:8080/api/products");
-  const json = await res.json();
-  return json.payload; 
+  const res = await axios.get<ApiResponse<Product[]>>("/products");
+  return res.data.payload ?? [];
 };
 
-export const deleteProduct = async (productId: number): Promise<void> => {
-  await axios.delete(
-    `/api/products/${productId}`
+/* ================= DELETE ================= */
+export const deleteProduct = async (
+  productId: number
+): Promise<void> => {
+  await axios.delete(`/products/${productId}`);
+};
+
+/* ================= GET BY ID ================= */
+export const getProductById = async (
+  id: number
+): Promise<Product | null> => {
+  const res = await axios.get<ApiResponse<Product>>(
+    `/products/${id}`
   );
-};
-
-export const getProductById = async (id: number): Promise<Product | null> => 
-{
-  const res = await axios.get<ApiResponse<Product>>(`/api/products/${id}`);
   return res.data.payload ?? null;
 };
 
+/* ================= CREATE ================= */
 export const createProduct = async (
   formData: FormData
 ): Promise<Product> => {
   const res = await axios.post<ApiResponse<Product>>(
-    "/api/products/createProduct",
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
+    "/products/createProduct",
+    formData
   );
 
   if (!res.data.payload) {
@@ -45,45 +41,46 @@ export const createProduct = async (
   return res.data.payload;
 };
 
+/* ================= UPDATE ================= */
 export const updateProduct = async (
   id: number,
   formData: FormData
 ): Promise<Product> => {
   const res = await axios.put<ApiResponse<Product>>(
-    `/api/products/${id}`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    }
+    `/products/${id}`,
+    formData
   );
 
-  return res.data.payload;
+  return res.data.payload!;
 };
 
-export const searchProducts = async (keyword: string): Promise<Product[]> => {
-    try {
-        const response = await axios.get<Product[]>('/api/products/search', {
-            params: {
-                keyword: keyword.trim()
-            }
-        });
-        return response.data; 
-    } catch (error) {
-        console.error('Error searching products:', error);
-        return [];
-    }
+/* ================= SEARCH ================= */
+export const searchProducts = async (
+  keyword: string
+): Promise<Product[]> => {
+  try {
+    const res = await axios.get<Product[]>(
+      "/products/search",
+      {
+        params: { keyword: keyword.trim() }
+      }
+    );
+    return res.data;
+  } catch (error) {
+    console.error("Error searching products:", error);
+    return [];
+  }
 };
 
+/* ================= BY CATEGORY ================= */
 export const getProductsByCategoryId = async (
   categoryId: number
 ): Promise<Product[]> => {
   const res = await axios.get<ApiResponse<Product[]>>(
-    `/api/products?categoryId=${categoryId}`
+    "/products",
+    {
+      params: { categoryId }
+    }
   );
   return res.data.payload ?? [];
 };
-
-
-
