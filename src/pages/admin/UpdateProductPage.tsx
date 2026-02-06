@@ -25,14 +25,27 @@ const ProductEditPage = () => {
   const loadProductAndCategories = async () => {
     try {
       const productRes = await getProductById(Number(id));
+      
+      if (!productRes) {
+        alert("Không tìm thấy sản phẩm");
+        navigate("/admin/product");
+        return;
+      }
+      
       setProduct(productRes);
       setImagePreview(resolveImageUrl(productRes?.imageUrl || ""));
 
       const categories = await CategoryService.getCategories();
-      setCategories(categories);
+      
+      if (!categories || categories.length === 0) {
+        setCategories([]);
+      } else {
+        setCategories(categories);
+      }
     } catch (error) {
       console.error(error);
       alert("Failed to load product data");
+      setCategories([]);
     }
   };
 
